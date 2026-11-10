@@ -4,13 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiController {
-  saveToken({required String token}) async {
+  // Token Is Saving In Local Storage
+  Future<bool> saveToken({required String token}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.setString('token', token);
   }
 
-  reteriveToken() async {
+  // Token Is Reteriving In Local Storage
+  Future<String> reteriveToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("token") ?? '';
   }

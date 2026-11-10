@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:newproject/constants/api_constant.dart';
+import 'package:get/get.dart';
 import 'package:newproject/constants/colors.dart';
 import 'package:newproject/constants/images.dart';
-import 'package:newproject/controller/api_controller.dart';
-import 'package:newproject/viewscreens/dashboard_screen.dart';
+import 'package:newproject/controller/auth_controller.dart';
 import 'package:newproject/viewscreens/signup_page.dart';
 
 class LogInPage extends StatefulWidget {
@@ -16,47 +13,10 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  bool _isObscured = true;
+  AuthController controller = Get.find<AuthController>();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isLoading = false;
-
-  logIn() async {
-    isLoading = true;
-    setState(() {});
-
-    var emailAddress = emailController.text;
-    var password = passwordController.text;
-
-    var myBody = {'email': emailAddress, 'password': password};
-
-    var response = await ApiController().post(
-      url: ApiConstant.logInApi,
-      body: myBody,
-    );
-
-    await Future.delayed(Duration(seconds: 2));
-    isLoading = false;
-    setState(() {});
-
-    if (response.$1 == 201 || response.$1 == 200) {
-      var logInResponse = jsonDecode(response.$2);
-      String token = logInResponse['token'];
-      ApiController().saveToken(token: token);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Successfully Login")));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
-      );
-    } else {
-      var loginRespose = jsonDecode(response.$2);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loginRespose['message'] ?? 'Login failed')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,74 +122,91 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                   ),
                 ),
-                TextField(
-                  textInputAction: TextInputAction.done,
-                  obscureText: _isObscured,
-                  controller: passwordController,
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: screenWidth * 0.038,
-                  ),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    fillColor: AppColors.white,
-                    filled: true,
-                    hintText: "Enter your password",
-                    hintStyle: TextStyle(
-                      color: AppColors.black54,
-                      fontSize: screenWidth * 0.038,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isObscured
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: AppColors.black54,
-                        size: screenWidth * 0.05,
+                GetBuilder<AuthController>(
+                  builder: (c) {
+                    return TextField(
+                      textInputAction: TextInputAction.done,
+                      obscureText: c.isObscured,
+                      controller: passwordController,
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: screenWidth * 0.038,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isObscured = !_isObscured;
-                        });
-                      },
-                    ),
-                  ),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        fillColor: AppColors.white,
+                        filled: true,
+                        hintText: "Enter your password",
+                        hintStyle: TextStyle(
+                          color: AppColors.black54,
+                          fontSize: screenWidth * 0.038,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            !c.isObscured
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: AppColors.black54,
+                            size: screenWidth * 0.05,
+                          ),
+                          onPressed: c.changeObscured,
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
                 SizedBox(height: screenHeight * 0.03),
 
                 // Login Button
-                SizedBox(
-                  width: double.infinity,
-                  height: screenHeight * 0.065,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: logIn,
-                    child: isLoading
-                        ? const CircularProgressIndicator(
-                            color: AppColors.white,
-                          )
-                        : Text(
-                            "Log in",
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: screenWidth * 0.04,
-                              fontWeight: FontWeight.bold,
-                            ),
+                GetBuilder<AuthController>(
+                  builder: (c) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: screenHeight * 0.065,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                  ),
+                        ),
+                        onPressed: () {
+                          if (emailController.text.isEmpty &&
+                              passwordController.text.isEmpty) {
+                            Get.snackbar(
+                              "Error",
+                              "Email and Password required",
+                            );
+                          } else {
+                            c.logIn(
+                              emailAddress: emailController.text,
+                              password: passwordController.text,
+                            );
+                          }
+                        },
+                        child: c.isLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.white,
+                              )
+                            : Text(
+                                "Log in",
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: screenWidth * 0.04,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    );
+                  },
                 ),
 
                 SizedBox(height: screenHeight * 0.035),
@@ -247,12 +224,7 @@ class _LogInPageState extends State<LogInPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
-                            ),
-                          );
+                          Get.to(() => SignUpPage());
                         },
                         child: Text(
                           "Create account",

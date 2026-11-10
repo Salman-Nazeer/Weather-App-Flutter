@@ -1,41 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:newproject/constants/api_constant.dart';
 import 'package:newproject/constants/colors.dart';
-import 'package:newproject/controller/api_controller.dart';
-import 'package:newproject/viewscreens/dashboard_screen.dart';
 
-import 'loginpage.dart';
-
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    onInItCalled();
-    super.initState();
-  }
-
-  Future<void> onInItCalled() async {
-    var response = await ApiController().get(
-      url: ApiConstant.rememberMeApi,
-      isToken: true,
-    );
-    if (response.$1 == 201 || response.$1 == 200) {
-      var route = MaterialPageRoute(
-        builder: (context) => const DashboardScreen(),
-      );
-      Navigator.pushReplacement(context, route);
-    } else {
-      var route = MaterialPageRoute(builder: (context) => const LogInPage());
-      Navigator.pushReplacement(context, route);
-    }
-    // await Future.delayed(const Duration(seconds: 2));
-  }
 
   @override
   Widget build(BuildContext context) {
