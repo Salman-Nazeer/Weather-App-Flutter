@@ -197,46 +197,46 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                GetBuilder<AuthController>(
-                  builder: (c) {
-                    return TextField(
-                      textInputAction: TextInputAction.done,
-                      obscureText: c.isObscured,
-                      controller: passwordController,
-                      style: TextStyle(
-                        color: AppColors.black,
+
+                Obx(
+                  () => TextField(
+                    textInputAction: TextInputAction.done,
+                    obscureText: controller.isObscured.value,
+                    controller: passwordController,
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: screenWidth * 0.038,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
+                      fillColor: AppColors.white,
+                      filled: true,
+                      hintText: "•••••",
+                      hintStyle: TextStyle(
+                        color: AppColors.black54,
                         fontSize: screenWidth * 0.038,
                       ),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: const BorderSide(color: Colors.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: const BorderSide(color: Colors.red),
-                        ),
-                        fillColor: AppColors.white,
-                        filled: true,
-                        hintText: "•••••",
-                        hintStyle: TextStyle(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.isObscured.value
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: AppColors.black54,
-                          fontSize: screenWidth * 0.038,
+                          size: screenWidth * 0.05,
                         ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            c.isObscured
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                            color: AppColors.black54,
-                            size: screenWidth * 0.05,
-                          ),
-                          onPressed: c.changeObscured,
-                        ),
+                        onPressed: controller.changeObscured,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
+
                 Padding(
                   padding: EdgeInsets.only(
                     left: screenWidth * 0.02,
@@ -257,40 +257,38 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: double.infinity,
                   height: screenHeight * 0.065,
-                  child: GetBuilder<AuthController>(
-                    builder: (c) {
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBlue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                  child: Obx(
+                    () => ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryBlue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        onPressed: () {
-                          if (nameController.text.isEmpty) {
-                            Get.snackbar("Error", "All Fields are required");
-                          } else {
-                            c.signUp(
-                              name: nameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-                          }
-                        },
-                        child: c.isLoading
-                            ? const CircularProgressIndicator(
+                      ),
+                      onPressed: () {
+                        if (nameController.text.isEmpty) {
+                          Get.snackbar("Error", "All Fields are required");
+                        } else {
+                          controller.signUp(
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                        }
+                      },
+                      child: controller.isLoading.value
+                          ? const CircularProgressIndicator(
+                              color: AppColors.white,
+                            )
+                          : Text(
+                              "Create Account",
+                              style: TextStyle(
                                 color: AppColors.white,
-                              )
-                            : Text(
-                                "Create Account",
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: screenWidth * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                fontSize: screenWidth * 0.04,
+                                fontWeight: FontWeight.bold,
                               ),
-                      );
-                    },
+                            ),
+                    ),
                   ),
                 ),
 

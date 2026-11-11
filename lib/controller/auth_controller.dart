@@ -3,16 +3,15 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:newproject/constants/api_constant.dart';
 import 'package:newproject/controller/api_controller.dart';
-import 'package:newproject/viewscreens/dashboard_screen.dart';
 import 'package:newproject/viewscreens/loginpage.dart';
+import 'package:newproject/viewscreens/nav_bar.dart';
 
 class AuthController extends GetxController {
-  bool isObscured = true;
-  bool isLoading = false;
+  RxBool isObscured = true.obs;
+  RxBool isLoading = false.obs;
 
   void changeObscured() {
-    isObscured = !isObscured;
-    update();
+    isObscured.value = !isObscured.value;
   }
 
   @override
@@ -27,7 +26,7 @@ class AuthController extends GetxController {
     required String emailAddress,
     required String password,
   }) async {
-    isLoading = true;
+    isLoading.value = true;
     update();
 
     var myBody = {'email': emailAddress, 'password': password};
@@ -37,18 +36,18 @@ class AuthController extends GetxController {
       body: myBody,
     );
 
-    await Future.delayed(Duration(seconds: 2));
-    isLoading = false;
-
     if (response.$1 == 201 || response.$1 == 200) {
       var logInResponse = jsonDecode(response.$2);
       String token = logInResponse['token'];
       ApiController().saveToken(token: token);
       Get.snackbar("Welcome To", "${logInResponse["user"]["name"]}");
-      Get.offAll(() => DashboardScreen());
+      Get.offAll(() => Navbar());
+      isLoading.value = false;
     } else {
       var loginRespose = jsonDecode(response.$2);
       Get.snackbar("Error", "${loginRespose['message'] ?? 'Login failed'}");
+      isLoading.value = false;
+      // update();
     }
   }
 
@@ -58,13 +57,7 @@ class AuthController extends GetxController {
     required String email,
     required String password,
   }) async {
-    isLoading = true;
-    update();
-
-    // var name = nameController.text;
-    // var email = emailController.text;
-    // var password = passwordController.text;
-
+    isLoading.value = true;
     var myBody = {'name': name, 'email': email, 'password': password};
 
     var response = await ApiController().post(
@@ -73,7 +66,7 @@ class AuthController extends GetxController {
     );
 
     await Future.delayed(Duration(seconds: 2));
-    isLoading = false;
+    isLoading.value = false;
 
     if (response.$1 == 201 || response.$1 == 200) {
       Get.snackbar("Welcome", "Your Account Is Registered");
@@ -101,7 +94,7 @@ class AuthController extends GetxController {
       isToken: true,
     );
     if (response.$1 == 201 || response.$1 == 200) {
-      Get.offAll(() => DashboardScreen());
+      Get.offAll(() => Navbar());
       //   var route = MaterialPageRoute(
       //     builder: (context) => const DashboardScreen(),
       //   );

@@ -4,4 +4,5 @@ class ApiConstant {
   static const String logInApi = '$_baseUrl/auth/login';
   static const String registerApi = '$_baseUrl/auth/register';
   static const String rememberMeApi = '$_baseUrl/auth/me';
+  static const String regionApi = '$_baseUrl/cities/regions';
 }

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:newproject/constants/colors.dart';
+import 'package:newproject/controller/home_controller.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -10,569 +19,272 @@ class DashboardScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.backgroundLight,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenWidth * 0.05,
-              vertical: screenHeight * 0.02,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Good evening",
-                          style: TextStyle(
-                            color: AppColors.black54,
-                            fontSize: screenWidth * 0.035,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.002),
-                        Text(
-                          "Demo Student",
-                          style: TextStyle(
-                            color: AppColors.black,
-                            fontSize: screenWidth * 0.065,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: screenWidth * 0.12,
-                      height: screenWidth * 0.12,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primaryBlue,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "DS",
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: screenWidth * 0.04,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: screenHeight * 0.025),
-
-                // Search Bar
-                TextField(
-                  // onChanged: () {},
-                  style: TextStyle(
-                    color: AppColors.black54, // Color of the text user types
-                    fontSize: screenWidth * 0.038,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: "Search cities or countries...",
-                    hintStyle: TextStyle(
-                      color: AppColors.black38,
-                      fontSize: screenWidth * 0.038,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: AppColors.black54,
-                      size: screenWidth * 0.055,
-                    ),
-                    filled: true,
-                    fillColor: AppColors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Colors.grey.shade200),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-
-                // Filter Categories
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenWidth * 0.022,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBlue,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.primaryBlue),
-                      ),
-                      child: Text(
-                        "All",
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenWidth * 0.035,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenWidth * 0.022,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Text(
-                        "Asia",
-                        style: TextStyle(
-                          color: AppColors.black87,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenWidth * 0.035,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenWidth * 0.022,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Text(
-                        "Europe",
-                        style: TextStyle(
-                          color: AppColors.black87,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenWidth * 0.035,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenWidth * 0.022,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Text(
-                        "Africa",
-                        style: TextStyle(
-                          color: AppColors.black87,
-                          fontWeight: FontWeight.w600,
-                          fontSize: screenWidth * 0.035,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: screenHeight * 0.025),
-
-                // Cities
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Cities",
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.05,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    Text(
-                      "23 results",
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.05,
+            vertical: screenHeight * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
                       style: TextStyle(
                         fontSize: screenWidth * 0.035,
-                        color: AppColors.black54,
                         fontWeight: FontWeight.w400,
+                        color: AppColors.black54,
                       ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: screenHeight * 0.015),
-
-                // City Card 1: Auckland
-                Container(
-                  margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                  padding: EdgeInsets.all(screenWidth * 0.035),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade100,
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: screenWidth * 0.12,
-                            height: screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.cloudCardBg,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.cloud_outlined,
-                              color: AppColors.primaryBlue,
-                              size: screenWidth * 0.07,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.035),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Auckland",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.003),
-                              Text(
-                                "New Zealand · Oceania",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.032,
-                                  color: AppColors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "15°",
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.055,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // City Card 2: Bangkok
-                Container(
-                  margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                  padding: EdgeInsets.all(screenWidth * 0.035),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade100,
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: screenWidth * 0.12,
-                            height: screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.sunnyCardBg,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.wb_sunny_outlined,
-                              color: AppColors.primaryBlue,
-                              size: screenWidth * 0.07,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.035),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Bangkok",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.003),
-                              Text(
-                                "Thailand · Asia",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.032,
-                                  color: AppColors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "33°",
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.055,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // City Card 3: Buenos Aires
-                Container(
-                  margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                  padding: EdgeInsets.all(screenWidth * 0.035),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade100,
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: screenWidth * 0.12,
-                            height: screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.sunnyCardBg,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.wb_sunny_outlined,
-                              color: AppColors.primaryBlue,
-                              size: screenWidth * 0.07,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.035),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Buenos Aires",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.003),
-                              Text(
-                                "Argentina · South America",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.032,
-                                  color: AppColors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "19°",
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.055,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // City Card 4: Cairo
-                Container(
-                  margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                  padding: EdgeInsets.all(screenWidth * 0.035),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade100,
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: screenWidth * 0.12,
-                            height: screenWidth * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.sunnyCardBg,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              Icons.wb_sunny_outlined,
-                              color: AppColors.primaryBlue,
-                              size: screenWidth * 0.07,
-                            ),
-                          ),
-                          SizedBox(width: screenWidth * 0.035),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Cairo",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.003),
-                              Text(
-                                "Egypt · Africa",
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.032,
-                                  color: AppColors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "27°",
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.055,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.02),
-
-                // More Pages
-                Container(
-                  width: double.infinity,
-                  height: screenHeight * 0.06,
-                  decoration: BoxDecoration(
-                    color: AppColors.cloudCardBg,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Load more · page 2 of 3",
-                      style: TextStyle(
-                        color: AppColors.primaryBlue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 0.038,
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.03),
-
-                // Navigation Menu Bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
                       children: [
-                        Icon(
-                          Icons.explore,
-                          color: AppColors.primaryBlue,
-                          size: screenWidth * 0.06,
-                        ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          "Explore",
+                        const TextSpan(text: "Good evening\n"),
+                        TextSpan(
+                          text: controller.name.value,
                           style: TextStyle(
-                            color: AppColors.primaryBlue,
-                            fontSize: screenWidth * 0.03,
-                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth * 0.065,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.black,
                           ),
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        Icon(
-                          Icons.favorite_outline,
-                          color: AppColors.black54,
-                          size: screenWidth * 0.06,
+                  ),
+                  Obx(
+                    () => CircleAvatar(
+                      radius: screenWidth * 0.06,
+                      backgroundColor: AppColors.primaryBlue,
+                      child: Text(
+                        controller.getInitials(),
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: screenWidth * 0.04,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          "Favorites",
-                          style: TextStyle(
-                            color: AppColors.black54,
-                            fontSize: screenWidth * 0.03,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Icon(
-                          Icons.person_outline,
-                          color: AppColors.black54,
-                          size: screenWidth * 0.06,
-                        ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          "Profile",
-                          style: TextStyle(
-                            color: AppColors.black54,
-                            fontSize: screenWidth * 0.03,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: screenHeight * 0.025),
+
+              // Search Bar
+              TextField(
+                style: TextStyle(
+                  color: AppColors.black54,
+                  fontSize: screenWidth * 0.038,
                 ),
-              ],
-            ),
+                decoration: InputDecoration(
+                  hintText: "Search cities or countries...",
+                  hintStyle: TextStyle(
+                    color: AppColors.black38,
+                    fontSize: screenWidth * 0.038,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: AppColors.black54,
+                    size: screenWidth * 0.055,
+                  ),
+                  filled: true,
+                  fillColor: AppColors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey.shade200),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey.shade400),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.02),
+
+              // Filter Categories
+              SingleChildScrollView(
+                child: Obx(
+                  () => SizedBox(
+                    height: screenWidth * 0.12,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.categories.length,
+                      itemBuilder: (context, index) {
+                        final bool isSelected =
+                            controller.selectedIndex.value == index;
+
+                        return Padding(
+                          padding: EdgeInsets.only(right: screenWidth * 0.03),
+                          child: TextButton(
+                            onPressed: () {
+                              controller.selectedIndex.value = index;
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: isSelected
+                                  ? AppColors.primaryBlue
+                                  : AppColors.white,
+                              foregroundColor: isSelected
+                                  ? AppColors.white
+                                  : AppColors.black87,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.05,
+                                vertical: screenWidth * 0.022,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(
+                                  color: isSelected
+                                      ? AppColors.primaryBlue
+                                      : Colors.grey.shade300,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              controller.categories[index],
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: screenWidth * 0.035,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.025),
+
+              // Section Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Cities",
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  Text(
+                    "${controller.cities.length} results",
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.035,
+                      color: AppColors.black54,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: screenHeight * 0.015),
+
+              // Cities List
+              SingleChildScrollView(
+                child: ListView.builder(
+                  itemCount: controller.cities.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final city = controller.cities[index];
+
+                    return Container(
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.015),
+                      padding: EdgeInsets.all(screenWidth * 0.035),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade100,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: screenWidth * 0.12,
+                                height: screenWidth * 0.12,
+                                decoration: BoxDecoration(
+                                  color: city["tileColor"] as Color?,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
+                                  city["icon"],
+                                  color: city["iconColor"],
+                                  size: screenWidth * 0.07,
+                                ),
+                              ),
+                              SizedBox(width: screenWidth * 0.035),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    city["name"],
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.042,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenHeight * 0.003),
+                                  Text(
+                                    "${city["country"]} · ${city["region"]}",
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.032,
+                                      color: AppColors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Text(
+                            city["temperature"],
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.055,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.02),
+
+              // More Pages Button
+              Container(
+                width: double.infinity,
+                height: screenHeight * 0.06,
+                decoration: BoxDecoration(
+                  color: AppColors.cloudCardBg,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Text(
+                    "Load more · page 2 of 3",
+                    style: TextStyle(
+                      color: AppColors.primaryBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth * 0.038,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -122,91 +122,85 @@ class _LogInPageState extends State<LogInPage> {
                     ),
                   ),
                 ),
-                GetBuilder<AuthController>(
-                  builder: (c) {
-                    return TextField(
-                      textInputAction: TextInputAction.done,
-                      obscureText: c.isObscured,
-                      controller: passwordController,
-                      style: TextStyle(
-                        color: AppColors.black,
+
+                Obx(
+                  () => TextField(
+                    textInputAction: TextInputAction.done,
+                    obscureText: controller.isObscured.value,
+                    controller: passwordController,
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: screenWidth * 0.038,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      fillColor: AppColors.white,
+                      filled: true,
+                      hintText: "Enter your password",
+                      hintStyle: TextStyle(
+                        color: AppColors.black54,
                         fontSize: screenWidth * 0.038,
                       ),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        fillColor: AppColors.white,
-                        filled: true,
-                        hintText: "Enter your password",
-                        hintStyle: TextStyle(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          !controller.isObscured.value
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: AppColors.black54,
-                          fontSize: screenWidth * 0.038,
+                          size: screenWidth * 0.05,
                         ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            !c.isObscured
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                            color: AppColors.black54,
-                            size: screenWidth * 0.05,
-                          ),
-                          onPressed: c.changeObscured,
-                        ),
+                        onPressed: controller.changeObscured,
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
 
                 SizedBox(height: screenHeight * 0.03),
 
                 // Login Button
-                GetBuilder<AuthController>(
-                  builder: (c) {
-                    return SizedBox(
-                      width: double.infinity,
-                      height: screenHeight * 0.065,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBlue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                Obx(
+                  () => SizedBox(
+                    width: double.infinity,
+                    height: screenHeight * 0.065,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryBlue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        onPressed: () {
-                          if (emailController.text.isEmpty &&
-                              passwordController.text.isEmpty) {
-                            Get.snackbar(
-                              "Error",
-                              "Email and Password required",
-                            );
-                          } else {
-                            c.logIn(
-                              emailAddress: emailController.text,
-                              password: passwordController.text,
-                            );
-                          }
-                        },
-                        child: c.isLoading
-                            ? const CircularProgressIndicator(
-                                color: AppColors.white,
-                              )
-                            : Text(
-                                "Log in",
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: screenWidth * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
                       ),
-                    );
-                  },
+                      onPressed: () {
+                        if (emailController.text.isEmpty &&
+                            passwordController.text.isEmpty) {
+                          Get.snackbar("Error", "Email and Password required");
+                        } else {
+                          controller.logIn(
+                            emailAddress: emailController.text,
+                            password: passwordController.text,
+                          );
+                        }
+                      },
+                      child: controller.isLoading.value
+                          ? const CircularProgressIndicator(
+                              color: AppColors.white,
+                            )
+                          : Text(
+                              "Log in",
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: screenWidth * 0.04,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
+                  ),
                 ),
 
                 SizedBox(height: screenHeight * 0.035),
