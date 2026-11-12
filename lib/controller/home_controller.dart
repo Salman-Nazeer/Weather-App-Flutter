@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:newproject/constants/api_constant.dart';
-import 'package:newproject/constants/colors.dart';
 import 'package:newproject/controller/api_controller.dart';
+import 'package:newproject/model/cities_weather_model.dart';
 
 class HomeController extends GetxController {
   @override
   void onInit() {
     getRegionDetails();
+    getCitiesDetails();
     // TODO: implement onInit
     super.onInit();
   }
@@ -31,46 +31,6 @@ class HomeController extends GetxController {
 
   RxInt selectedIndex = 0.obs;
 
-  // Cities data
-  RxList cities = [
-    {
-      "name": "Auckland",
-      "country": "New Zealand",
-      "region": "Oceania",
-      "temperature": "15°",
-      "icon": Icons.cloud_outlined,
-      "tileColor": AppColors.cloudCardBg,
-      "iconColor": AppColors.primaryBlue,
-    },
-    {
-      "name": "Bangkok",
-      "country": "Thailand",
-      "region": "Asia",
-      "temperature": "33°",
-      "icon": Icons.wb_sunny_outlined,
-      "tileColor": AppColors.sunnyCardBg,
-      "iconColor": Colors.orange,
-    },
-    {
-      "name": "Buenos Aires",
-      "country": "Argentina",
-      "region": "South America",
-      "temperature": "19°",
-      "icon": Icons.wb_sunny_outlined,
-      "tileColor": AppColors.sunnyCardBg,
-      "iconColor": Colors.orange,
-    },
-    {
-      "name": "Cairo",
-      "country": "Egypt",
-      "region": "Africa",
-      "temperature": "27°",
-      "icon": Icons.wb_sunny_outlined,
-      "tileColor": AppColors.sunnyCardBg,
-      "iconColor": Colors.orange,
-    },
-  ].obs;
-
   Future<void> getRegionDetails() async {
     var response = await ApiController().get(url: ApiConstant.regionApi);
 
@@ -79,6 +39,34 @@ class HomeController extends GetxController {
         var regionRespone = jsonDecode(response.$2)['data'];
         for (var i in regionRespone) {
           categories.add(i["name"]);
+        }
+      }
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
+  // Cities data
+  RxList<dynamic> cities = [].obs;
+  bool hasNext = true;
+  int cityPage = 1;
+
+ 
+
+  Future<void> getCitiesDetails() async {
+    try {
+      var response = await ApiController().get(
+        url: ApiConstant.cityApi(cityPage),
+      );
+      if (response.$1 == 201 || response.$1 == 200) {
+        final citiesWeather = citiesWeatherFromJson(response.$2);
+        print(citiesWeather.data);
+        if (citiesWeather.data != null) {
+          cities.addAll(citiesWeather.data!);
+          hasNext = citiesWeather.meta!.hasNext!;
+          cityPage++;
+    print("pages in in cities   $cityPage");
+
         }
       }
     } catch (e) {

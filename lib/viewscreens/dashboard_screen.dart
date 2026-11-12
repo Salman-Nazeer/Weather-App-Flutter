@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:newproject/constants/colors.dart';
 import 'package:newproject/controller/home_controller.dart';
+import 'package:newproject/model/cities_weather_model.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -184,103 +185,107 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(height: screenHeight * 0.015),
 
               // Cities List
-              SingleChildScrollView(
-                child: ListView.builder(
-                  itemCount: controller.cities.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final city = controller.cities[index];
-
-                    return Container(
-                      margin: EdgeInsets.only(bottom: screenHeight * 0.015),
-                      padding: EdgeInsets.all(screenWidth * 0.035),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade100,
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: screenWidth * 0.12,
-                                height: screenWidth * 0.12,
-                                decoration: BoxDecoration(
-                                  color: city["tileColor"] as Color?,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  city["icon"],
-                                  color: city["iconColor"],
-                                  size: screenWidth * 0.07,
+              Obx(
+                () => Expanded(
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount:
+                        controller.cities.length + (controller.hasNext ? 1 : 0),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      if (index == controller.cities.length &&
+                          controller.hasNext) {
+                        return GestureDetector(
+                          onTap: controller.getCitiesDetails,
+                          child: Container(
+                            width: double.infinity,
+                            height: screenHeight * 0.06,
+                            decoration: BoxDecoration(
+                              color: AppColors.cloudCardBg,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Load more page",
+                                style: TextStyle(
+                                  color: AppColors.primaryBlue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenWidth * 0.038,
                                 ),
                               ),
-                              SizedBox(width: screenWidth * 0.035),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    city["name"],
-                                    style: TextStyle(
-                                      fontSize: screenWidth * 0.042,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.003),
-                                  Text(
-                                    "${city["country"]} · ${city["region"]}",
-                                    style: TextStyle(
-                                      fontSize: screenWidth * 0.032,
-                                      color: AppColors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Text(
-                            city["temperature"],
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.055,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.black,
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              SizedBox(height: screenHeight * 0.02),
-
-              // More Pages Button
-              Container(
-                width: double.infinity,
-                height: screenHeight * 0.06,
-                decoration: BoxDecoration(
-                  color: AppColors.cloudCardBg,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(
-                  child: Text(
-                    "Load more · page 2 of 3",
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.038,
-                    ),
+                        );
+                      }
+                      Datum city = controller.cities[index];
+                      return Container(
+                        margin: EdgeInsets.only(bottom: screenHeight * 0.015),
+                        padding: EdgeInsets.all(screenWidth * 0.035),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade100,
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: screenWidth * 0.12,
+                                  height: screenWidth * 0.12,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.backgroundLight,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    Icons.cloud,
+                                    color: Colors.blueAccent,
+                                    size: screenWidth * 0.07,
+                                  ),
+                                ),
+                                SizedBox(width: screenWidth * 0.035),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      city.name!,
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.042,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: screenHeight * 0.003),
+                                    Text(
+                                      "${city.country} · ${city.region}",
+                                      style: TextStyle(
+                                        fontSize: screenWidth * 0.032,
+                                        color: AppColors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Text(
+                              city.weather!.temperatureC!.toStringAsFixed(0),
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.055,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
