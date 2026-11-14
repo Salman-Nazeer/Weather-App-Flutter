@@ -3,19 +3,38 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:newproject/constants/api_constant.dart';
 import 'package:newproject/controller/api_controller.dart';
+import 'package:newproject/controller/auth_controller.dart';
 import 'package:newproject/model/cities_weather_model.dart';
 
 class HomeController extends GetxController {
+  final AuthController authController = Get.find<AuthController>();
+  // @override
+  // void onInit() {
+  //   getRegionDetails();
+  //   getCitiesDetails();
+  //   // TODO: implement onInit
+  //   super.onInit();
+  // }
+
+  // Function to get initials from full name@override
+  RxString name = "".obs; // Initialize empty or with a fallback
   @override
   void onInit() {
+    // Extract name from authController's logInResponse
+    if (authController.logInResponse.isNotEmpty &&
+        authController.logInResponse["user"] != null) {
+      name.value = authController.logInResponse["user"]["name"] ?? "User";
+    } else {
+      name.value = "Demo Student"; // Fallback default name
+    }
+
     getRegionDetails();
     getCitiesDetails();
-    // TODO: implement onInit
+
+    // TODO: implement onReady
     super.onInit();
   }
 
-  // Function to get initials from full name
-  RxString name = "Salman Nazeer".obs;
   String getInitials() {
     List<String> parts = name.value.trim().split(' ');
 
@@ -30,8 +49,11 @@ class HomeController extends GetxController {
   RxList<String> categories = ["All"].obs;
 
   RxInt selectedIndex = 0.obs;
+  RxBool isRegionLoading = false.obs;
 
   Future<void> getRegionDetails() async {
+    isRegionLoading.value = true;
+
     var response = await ApiController().get(url: ApiConstant.regionApi);
 
     try {
@@ -43,6 +65,8 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       print("Error $e");
+    } finally {
+      isRegionLoading.value = false;
     }
   }
 
@@ -50,13 +74,17 @@ class HomeController extends GetxController {
   RxList<dynamic> cities = [].obs;
   bool hasNext = true;
   int cityPage = 1;
-
- 
+  bool isCitiesLoading = false;
 
   Future<void> getCitiesDetails() async {
+    if (isCitiesLoading || !hasNext) return;
+    isCitiesLoading = true;
+    update();
+
     try {
       var response = await ApiController().get(
-        url: ApiConstant.cityApi(cityPage),
+        url: ApiConstant.cityApi,
+        queryParams: {'page': cityPage.toString(), 'limit': '8'},
       );
       if (response.$1 == 201 || response.$1 == 200) {
         final citiesWeather = citiesWeatherFromJson(response.$2);
@@ -65,12 +93,13 @@ class HomeController extends GetxController {
           cities.addAll(citiesWeather.data!);
           hasNext = citiesWeather.meta!.hasNext!;
           cityPage++;
-    print("pages in in cities   $cityPage");
-
         }
       }
     } catch (e) {
       print("Error $e");
+    } finally {
+      isCitiesLoading = false;
+      update();
     }
   }
 }

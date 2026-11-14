@@ -7,6 +7,7 @@ import 'package:newproject/viewscreens/loginpage.dart';
 import 'package:newproject/viewscreens/nav_bar.dart';
 
 class AuthController extends GetxController {
+  Map<String, dynamic> logInResponse = {};
   RxBool isObscured = true.obs;
   RxBool isLoading = false.obs;
 
@@ -37,7 +38,7 @@ class AuthController extends GetxController {
     );
 
     if (response.$1 == 201 || response.$1 == 200) {
-      var logInResponse = jsonDecode(response.$2);
+      logInResponse = jsonDecode(response.$2);
       String token = logInResponse['token'];
       ApiController().saveToken(token: token);
       Get.snackbar("Welcome To", "${logInResponse["user"]["name"]}");
