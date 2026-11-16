@@ -35,6 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -124,21 +125,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 if (controller.isRegionLoading.value) {
                   return _buildCategoryShimmer(screenWidth);
                 }
+                final selectedIdx = controller.selectedRegionIndex.value;
                 return SizedBox(
                   height: screenWidth * 0.12,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.categories.length,
                     itemBuilder: (context, index) {
-                      final bool isSelected =
-                          controller.selectedIndex.value == index;
+                      final bool isSelected = selectedIdx == index;
 
                       return Padding(
                         padding: EdgeInsets.only(right: screenWidth * 0.03),
                         child: TextButton(
-                          onPressed: () {
-                            controller.selectedIndex.value = index;
-                          },
+                          onPressed: () => controller.regionTap(index),
                           style: TextButton.styleFrom(
                             backgroundColor: isSelected
                                 ? AppColors.primaryBlue

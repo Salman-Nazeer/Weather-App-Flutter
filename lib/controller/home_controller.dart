@@ -8,14 +8,6 @@ import 'package:newproject/model/cities_weather_model.dart';
 
 class HomeController extends GetxController {
   final AuthController authController = Get.find<AuthController>();
-  // @override
-  // void onInit() {
-  //   getRegionDetails();
-  //   getCitiesDetails();
-  //   // TODO: implement onInit
-  //   super.onInit();
-  // }
-
   // Function to get initials from full name@override
   RxString name = "".obs; // Initialize empty or with a fallback
   @override
@@ -48,8 +40,14 @@ class HomeController extends GetxController {
 
   RxList<String> categories = ["All"].obs;
 
-  RxInt selectedIndex = 0.obs;
+  RxInt selectedRegionIndex = 0.obs;
   RxBool isRegionLoading = false.obs;
+
+  void regionTap(int index) {
+    selectedRegionIndex.value = index;
+    print(categories[selectedRegionIndex.value]);
+    getCitiesDetails(reset: true);
+  }
 
   Future<void> getRegionDetails() async {
     isRegionLoading.value = true;
@@ -76,7 +74,21 @@ class HomeController extends GetxController {
   int cityPage = 1;
   bool isCitiesLoading = false;
 
-  Future<void> getCitiesDetails() async {
+  Future<void> getCitiesDetails({bool reset = false}) async {
+    Map<String, String> queryParams = {};
+    if (reset) {
+      cities.clear();
+      hasNext = true;
+      cityPage = 1;
+      isCitiesLoading = false;
+    }
+
+    queryParams.addAll({'page': cityPage.toString(), 'limit': '8'});
+
+    if (selectedRegionIndex.value != 0) {
+      queryParams.addAll({'region': categories[selectedRegionIndex.value]});
+    }
+
     if (isCitiesLoading || !hasNext) return;
     isCitiesLoading = true;
     update();
@@ -84,11 +96,10 @@ class HomeController extends GetxController {
     try {
       var response = await ApiController().get(
         url: ApiConstant.cityApi,
-        queryParams: {'page': cityPage.toString(), 'limit': '8'},
+        queryParams: queryParams,
       );
       if (response.$1 == 201 || response.$1 == 200) {
         final citiesWeather = citiesWeatherFromJson(response.$2);
-        print(citiesWeather.data);
         if (citiesWeather.data != null) {
           cities.addAll(citiesWeather.data!);
           hasNext = citiesWeather.meta!.hasNext!;
